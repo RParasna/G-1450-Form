@@ -109,33 +109,58 @@ export default function  Form(props)  {
         }
     }
 
-    const handleClick = (e) => {
-        if (props.input) {
-            const applicant = {
-                firstName: firstName,
-                middleName: middleName,
-                lastName: lastName,
-                cardFirstName: cardFirstName,
-                cardMiddleName: cardMiddleName,
-                cardLastName: cardLastName,
-                streetName: streetName,
-                buildingType: buildingType === 0 ? "Apt" : buildingType === 1 ? "Ste" : "Flr",
-                buildingNum: buildingNum,
-                city: city,
-                state: state,
-                zipCode: zipCode,
-                signature: signature,
-                telephoneNumber: telephoneNumber,
-                email: email,
-                cardNumber: cardNumber,
-                expiryDate: expiryDate,
-                cardType: cardType === 0 ? "Visa" : cardType === 1 ? "MasterCard" :  cardType === 2 ? "American Express" : "Discover",
-                payment: payment
-            };
-    
-            console.log(applicant);
+    const handleClick = async (e) => {
+        const applicant = {
+            firstName: firstName,
+            middleName: middleName,
+            lastName: lastName,
+            cardFirstName: cardFirstName,
+            cardMiddleName: cardMiddleName,
+            cardLastName: cardLastName,
+            streetName: streetName,
+            buildingType: buildingType === 0 ? "Apt" : buildingType === 1 ? "Ste" : "Flr",
+            buildingNum: buildingNum,
+            city: city,
+            state: state,
+            zipCode: zipCode,
+            signature: signature,
+            telephoneNumber: telephoneNumber,
+            email: email,
+            cardNumber: cardNumber,
+            expiryDate: expiryDate,
+            cardType: cardType === 0 ? "Visa" : cardType === 1 ? "MasterCard" :  cardType === 2 ? "American Express" : "Discover",
+            payment: payment
+        };
 
-            navigate('/edit',{ state: {applicant: applicant}})
+        
+
+        if (props.input) {
+            await fetch("http://localhost:8080/applicant", {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify(applicant)
+            }).then(response => response.json())
+            .then(data => {
+                console.log("applicant added")
+                console.log(data)
+                navigate('/edit',{ state: {applicant: applicant, id: data.id}})
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        } else {
+            applicant.id = props.id;
+            await fetch("http://localhost:8080/applicant", {
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify(applicant)
+            }).then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }
     }
 

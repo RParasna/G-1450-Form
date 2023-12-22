@@ -16,7 +16,7 @@ export default function  Edit()  {
             <div className="header">
               Edit G-1450 Form Submission
             </div>
-            <Form input={false} applicant={location.state.applicant}/>
+            <Form input={false} applicant={location.state.applicant} id={location.state.id}/>
         </div>
     </div>
   );
