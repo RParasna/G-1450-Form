@@ -61,6 +61,8 @@ export default function  Form(props)  {
     const emailReg = new RegExp(/^[A-z0-9. _%+-]+@[A-z0-9. -]+\.[A-z]{2,}$/)
     const expiryReg = new RegExp("(^[0-9][1-9]/2[0-9]{3}$)");
     const paymentReg = new RegExp("(^[0-9]+$|^[0-9]+.[0-9]+$)");
+    const disabledButtonClass = "rounded bg-indigo-600 w-full  px-6 py-3 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+    const enabledButtonClass = "rounded bg-gray-300 w-full  px-6 py-3 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 
     
     useEffect(() => {
@@ -182,42 +184,40 @@ export default function  Form(props)  {
             cardType: cardType === 0 ? "Visa" : cardType === 1 ? "MasterCard" :  cardType === 2 ? "American Express" : "Discover",
             payment: payment
         };
-        console.log(applicant)
-        navigate('/edit',{ state: {applicant: applicant}})
         
         
 
-        // if (props.input) {
-        //     await fetch("http://34.207.196.168:8080/applicant", {
-        //         method:"POST",
-        //         headers:{"Content-Type":"application/json"},
-        //         body: JSON.stringify(applicant)
-        //     }).then(response => response.json())
-        //     .then(data => {
-        //         console.log("applicant added")
-        //         console.log(data)
-        //         navigate('/edit',{ state: {applicant: applicant, id: data.id}})
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //         setSubmitError(true);
-        //     })
-        // } else {
-        //     applicant.id = props.id;
-        //     await fetch("http://34.207.196.168:8080/applicant", {
-        //         method:"PUT",
-        //         headers:{"Content-Type":"application/json"},
-        //         body: JSON.stringify(applicant)
-        //     }).then(response => response.json())
-        //     .then(data => {
-        //         console.log(data)
-        //         props.setSubmitted(true)
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //         setSubmitError(true);
-        //     })
-        // }
+        if (props.input) {
+            await fetch("http://34.207.196.168:8080/applicant", {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify(applicant)
+            }).then(response => response.json())
+            .then(data => {
+                console.log("applicant added")
+                console.log(data)
+                navigate('/edit',{ state: {applicant: applicant, id: data.id}})
+            })
+            .catch((err) => {
+                console.log(err);
+                setSubmitError(true);
+            })
+        } else {
+            applicant.id = props.id;
+            await fetch("http://34.207.196.168:8080/applicant", {
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify(applicant)
+            }).then(response => response.json())
+            .then(data => {
+                console.log(data)
+                props.setSubmitted(true)
+            })
+            .catch((err) => {
+                console.log(err);
+                setSubmitError(true);
+            })
+        }
     }
 
 return  (
@@ -414,7 +414,14 @@ return  (
         </div>
         <div className="flex justify-center content-center">
             <div className="w-6/12 font-bold mb-8 sm:text-lg">
-                <Button fullWidth  disabled={buttonDisabled} onClick={(e) => {handleClick(e); }} variant="contained">{props.input ? "Submit" : "Resubmit"}</Button>
+                <button
+                    disabled={buttonDisabled}
+                    onClick={(e) => {handleClick(e); }}
+                    type="button"
+                    className={buttonDisabled ? enabledButtonClass : disabledButtonClass}
+                >
+                    {props.input ? "Submit" : "Resubmit"}
+                </button>
             </div>
         </div>
          {submitError && <div className="flex justify-center content-center w-full font-bold mb-8 text-red-600 text-lg">
