@@ -187,7 +187,7 @@ export default function  Form(props)  {
         
 
         if (props.input) {
-            await fetch("http://localhost:8080/applicant", {
+            await fetch("http://34.207.196.168:8080/applicant", {
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body: JSON.stringify(applicant)
@@ -203,7 +203,7 @@ export default function  Form(props)  {
             })
         } else {
             applicant.id = props.id;
-            await fetch("http://localhost:8080/applicant", {
+            await fetch("http://34.207.196.168:8080/applicant", {
                 method:"PUT",
                 headers:{"Content-Type":"application/json"},
                 body: JSON.stringify(applicant)
